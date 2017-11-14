@@ -11,6 +11,8 @@ double unit_vector[5][5];
 unit_vector[0]={1,0,0,0,0};
 
 int direction_sign;
+int steps;
+double norm;
 
 void main()
 {
@@ -27,31 +29,59 @@ for(int i=0;i<5;i++)
 {
 	if(i>0)
 	{
-		change_element(i);
+		kick_element(i);
 	}
 	
 	for(int k=0;k<i;k++)
 	{
+		steps = 0;
 		direction_sign = 1;
-		int reverse = 0;
-		while(reverse > -2)
+		int good = 0;
+		while(good == 0)
 		{
 			change_values(k,direction_sign);
-			sleep(1);
 			double current_new = get_current();
 			if(current_new > current_max)
 			{
+				steps++;
 				current_max = current_new;
+				get_point();
+				for(int j=0;j<5;j++)
+				{
+					point[i+1][j]=run_point[j];
+				}
 			}
 			else if(current_new < current_max)]
 			{
-				direction_sign = -1;
-				reverse--;
+				if(steps > 0)
+				{
+					good=1;
+				}
+				else if(steps == 0)
+				{
+					steps++;
+					direction_sign = -1;
+				}
 			}
 		}
-		
-		
-		
+	}
+	
+	norm=0;
+	for(int j=0;j<5;j++)
+	{
+		norm += pow(point[i+1][j]-point[i][j],2);
+	}
+	norm = sqrt(norm);
+	for(int j=0;j<5;j++)
+	{
+		if(norm!=0)
+		{
+			unit_vector[i][j]=(1/norm)*(point[i+1][j]-point[i][j]);
+		}
+		else{	unit_vector[i][j]=0;}
+	}
+	
+	
 
 }
 	
@@ -84,11 +114,12 @@ void change_values(int vector_number,int sign)
 	{
 		new_values[j]=run_point[j]+10*unit_vector[vector_number][j]*units[j]*sign;
 	}
-	
 }
 
-void change_element(int index)
+void kick_element(int index)
 {
 	get_point();
 	double new_value = run_point[index] + 50*units[index];
+	
+	sleep(1);
 }
